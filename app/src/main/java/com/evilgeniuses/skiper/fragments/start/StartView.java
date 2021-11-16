@@ -1,4 +1,6 @@
 package com.evilgeniuses.skiper.fragments.start;
 
-public interface StartView {
+import com.evilgeniuses.skiper.utils.common.BaseView;
+
+public interface StartView extends BaseView {
 }

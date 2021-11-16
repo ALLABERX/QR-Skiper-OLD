@@ -17,47 +17,41 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.evilgeniuses.skiper.R;
 import com.evilgeniuses.skiper.activities.main.MainActivity;
-import com.evilgeniuses.skiper.utils.PreferenceManager;
 
 public class SliderActivity extends AppCompatActivity {
 
-    PreferenceManager preferenceManager;
     LinearLayout Layout_bars;
     TextView[] bottomBars;
     int[] screens;
-    Button Skip, Next;
-    ViewPager vp;
-    MyViewPagerAdapter myvpAdapter;
-
+    Button buttonSkip;
+    Button buttonNext;
+    ViewPager viewPager;
+    MyViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
-        vp = (ViewPager) findViewById(R.id.view_pager);
-        Layout_bars = (LinearLayout) findViewById(R.id.layoutBars);
-        Skip = (Button) findViewById(R.id.skip);
-        Next = (Button) findViewById(R.id.next);
+        viewPager = findViewById(R.id.view_pager);
+        Layout_bars = findViewById(R.id.layoutBars);
+        buttonSkip = findViewById(R.id.buttonSkip);
+        buttonNext = findViewById(R.id.buttonNext);
         screens = new int[]{
                 R.layout.intro_screen1,
                 R.layout.intro_screen2,
                 R.layout.intro_screen3,
         };
-        myvpAdapter = new MyViewPagerAdapter();
-        vp.setAdapter(myvpAdapter);
-        preferenceManager = new PreferenceManager(this);
-        vp.addOnPageChangeListener(viewPagerPageChangeListener);
-        if (!preferenceManager.FirstLaunch()) {
-            launchMain();
-            finish();
-        }
+        viewPagerAdapter = new MyViewPagerAdapter();
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+
         ColoredBars(0);
     }
 
     public void next(View v) {
         int i = getItem(+1);
         if (i < screens.length) {
-            vp.setCurrentItem(i);
+            viewPager.setCurrentItem(i);
         } else {
             launchMain();
         }
@@ -85,11 +79,10 @@ public class SliderActivity extends AppCompatActivity {
     }
 
     private int getItem(int i) {
-        return vp.getCurrentItem() + i;
+        return viewPager.getCurrentItem() + i;
     }
 
     private void launchMain() {
-        preferenceManager.setFirstTimeLaunch(false);
         startActivity(new Intent(SliderActivity.this, MainActivity.class));
         finish();
     }
@@ -100,11 +93,11 @@ public class SliderActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
             ColoredBars(position);
             if (position == screens.length - 1) {
-                Next.setText("start");
-                Skip.setVisibility(View.GONE);
+                buttonNext.setText("start");
+                buttonSkip.setVisibility(View.GONE);
             } else {
-                Next.setText(getString(R.string.next));
-                Skip.setVisibility(View.VISIBLE);
+                buttonNext.setText(getString(R.string.next));
+                buttonSkip.setVisibility(View.VISIBLE);
             }
         }
 

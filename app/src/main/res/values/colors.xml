@@ -26,4 +26,7 @@
         <item>#CCFF90</item>
         <item>#E040FB</item>
     </array>
+
+    <color name="color_splash_screen">#FF018786</color>
+
 </resources>

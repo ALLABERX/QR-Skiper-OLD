@@ -20,50 +20,50 @@ import android.widget.ImageView;
 
 import com.evilgeniuses.skiper.R;
 import com.evilgeniuses.skiper.activities.slider.SliderActivity;
+import com.evilgeniuses.skiper.fragments.home.HomeFragment;
 import com.evilgeniuses.skiper.fragments.scanner.ScannerFragment;
+import com.evilgeniuses.skiper.fragments.start.StartFragment;
+import com.evilgeniuses.skiper.utils.PreferenceManager;
 import com.google.zxing.WriterException;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int MY_PERMISSIONS_REQUEST_CAMERA=0;
 
-        int permissionStatus = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+        boolean qrCodeLoaded = preferenceManager.isQrCodeLoaded();
+        if (!qrCodeLoaded) {
+            setFragment(StartFragment.newInstance());
+        } else {
+            setFragment(HomeFragment.newInstance());
 
-        if (permissionStatus != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
         }
-
-
-
-
-        Bitmap bitmap;
-        ImageView imageView = findViewById(R.id.imageView);
-
-        QRGEncoder qrgEncoder = new QRGEncoder("inputValue", null, QRGContents.Type.TEXT, 25);
-        qrgEncoder.setColorBlack(Color.RED);
-        qrgEncoder.setColorWhite(Color.BLUE);
-        bitmap = qrgEncoder.getBitmap();
-        imageView.setImageBitmap(bitmap);
-
-
-        startActivity(new Intent(this, SliderActivity.class));
-        finish();
-
-        //setFragment(ScannerFragment.newInstance());
     }
 
+    @Override
     public void setFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+        boolean qrCodeLoaded = preferenceManager.isQrCodeLoaded();
+        if (qrCodeLoaded) {
+            setFragment(HomeFragment.newInstance());
+        } else {
+            setFragment(StartFragment.newInstance());
+        }
     }
 }

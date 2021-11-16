@@ -1,4 +1,4 @@
-package com.evilgeniuses.skiper.fragments.home;
+package com.evilgeniuses.skiper.fragments.browser;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,9 +24,9 @@ import com.evilgeniuses.skiper.utils.PreferenceManager;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
-public class HomeFragment extends Fragment implements StartView {
+public class BrowserFragment extends Fragment implements StartView {
 
-    HomePresenter homePresenter;
+    BrowserPresenter browserPresenter;
     MainView mainView;
 
     Button buttonReset;
@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment implements StartView {
         PreferenceManager preferenceManager = new PreferenceManager(getContext());
         String qRcode = preferenceManager.getQRcode();
         Bitmap bitmap;
-        QRGEncoder qrgEncoder = new QRGEncoder(qRcode, null, QRGContents.Type.TEXT, 800);
+        QRGEncoder qrgEncoder = new QRGEncoder(qRcode, null, QRGContents.Type.TEXT, 600);
         qrgEncoder.setColorBlack(Color.RED);
         qrgEncoder.setColorWhite(Color.BLUE);
         bitmap = qrgEncoder.getBitmap();
@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment implements StartView {
         }
     }
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    public static BrowserFragment newInstance() {
+        return new BrowserFragment();
     }
 }
